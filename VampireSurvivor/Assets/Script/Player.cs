@@ -11,12 +11,18 @@ public class Player : MonoBehaviour
     private Vector3 lookTarget;
     public Animator anim;
 
+    public float jumpPower = 10f;
+    public float gravity = -20;
+    private float yVelocity = 0; //높이가속
+    private bool isGround = true;
+
     [Header("Attack Info")]
     public GameObject bulletPrefab;
     public Transform firePos;
     public float bulletOffset; //총알 간격
     private float bulletTime; //격발 시간
     public float setBulletTime; //설정할 격발 시간
+    public CameraMove cam;
 
     // Start is called before the first frame update
     void Start()
@@ -37,8 +43,25 @@ public class Player : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        Vector3 pos = new Vector3(-v, 0, h);
-        cc.SimpleMove(pos * speed);
+        Vector3 pos = new Vector3(-v, 0, h) * speed;
+
+        if (cc.isGrounded)
+        {
+            yVelocity = 0; //강하 속도 0으로 초기화
+            isGround = true;
+        }
+
+        if (Input.GetButtonDown("Jump") && isGround == true)
+        {
+            yVelocity = jumpPower;
+            isGround = false;
+        }
+
+        yVelocity += gravity * Time.deltaTime; //중력 적용
+        pos.y = yVelocity;
+        cc.Move(pos * Time.deltaTime);
+
+        //cc.SimpleMove(pos * speed);
 
         anim.SetFloat("Move", Mathf.Abs(h) + Mathf.Abs(v));
     }
@@ -65,6 +88,7 @@ public class Player : MonoBehaviour
             for (int i = 0; i < 3; i++)
                 CreateBullet();
 
+            bulletTime = 0;
             anim.SetTrigger("Fire");
         }
 
@@ -78,10 +102,14 @@ public class Player : MonoBehaviour
                     CreateBullet();
                 bulletTime = 0;
             }
+
+            cam.CameraShakeOn();
         }
 
         if (Input.GetButtonUp("Fire1"))
         {
+            bulletTime = 0;
+            cam.CameraShakeOff();
             anim.SetTrigger("Fire");
         }
     }
