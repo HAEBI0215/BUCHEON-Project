@@ -38,6 +38,7 @@ public class Zombie : MonoBehaviour
     private float attackTime;
     private float delayTime;
     public AnimationClip attackClip;
+    public ZombieAttack zombieAttack;
 
     [Header("Zonbie Hp")]
     public float zombieHp;
@@ -93,10 +94,17 @@ public class Zombie : MonoBehaviour
 
                         if (dist <= attackRange)
                         {
-                            agent.isStopped = true;
-                            AnimOn(2);
-                            attackState = AttackState.Attack;
-                            actionState = ActionState.Attack;
+                            switch (player.GetComponent<Player>().playerLiveState)
+                            {
+                                case Player.PlayerLiveState.Live:
+                                    {
+                                        agent.isStopped = true;
+                                        AnimOn(2);
+                                        attackState = AttackState.Attack;
+                                        actionState = ActionState.Attack;
+                                        break;
+                                    }
+                            }
                         }
                     }
                     break;
@@ -110,6 +118,7 @@ public class Zombie : MonoBehaviour
                                 attackTime += Time.deltaTime;
                                 if (attackTime >= attackClip.length * 0.25f)
                                 {
+                                    zombieAttack.ZombieAttackOn();
                                     AnimOn(0);
                                     attackTime = 0;
                                     delayTime = 0;
@@ -120,13 +129,20 @@ public class Zombie : MonoBehaviour
                             }
                         case AttackState.Delay:
                             {
-                                delayTime += Time.deltaTime;
-                                if (delayTime >= attackClip.length * 0.75f)
+                                switch (player.GetComponent<Player>().playerLiveState)
                                 {
-                                    AnimOn(2);
-                                    attackTime = 0;
-                                    delayTime = 0;
-                                    attackState = AttackState.Attack;
+                                    case Player.PlayerLiveState.Live:
+                                        {
+                                            delayTime += Time.deltaTime;
+                                            if (delayTime >= attackClip.length * 0.75f)
+                                            {
+                                                AnimOn(2);
+                                                attackTime = 0;
+                                                delayTime = 0;
+                                                attackState = AttackState.Attack;
+                                            }
+                                            break;
+                                        }
                                 }
                                 break;
                             }

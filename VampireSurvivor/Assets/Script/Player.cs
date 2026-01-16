@@ -6,7 +6,13 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public enum PlayerLiveState
+    {
+        Live,
+        Dead
+    }
     [Header("Player Info")]
+    public PlayerLiveState playerLiveState = PlayerLiveState.Live;
     private CharacterController cc;
     public float speed;
     private Vector3 lookTarget;
@@ -48,10 +54,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMove();
-        PlayerRotate();
-        PlayerFire();
-        PlayerHP();
+        switch (playerLiveState)
+        {
+            case PlayerLiveState.Live:
+                {
+                    PlayerMove();
+                    PlayerRotate();
+                    PlayerFire();
+                    PlayerHP();
+                    break;
+                }
+        }
     }
 
     void PlayerMove()
@@ -140,7 +153,14 @@ public class Player : MonoBehaviour
                     //HP 슬라이더의 값이 hpPer로 hpSpeed의 속도로 일정하게 이동
 
                     if (hpSlider.value == hpPer)
+                    {
+                        if (hpSlider.value == 0)
+                        {
+                            playerLiveState = PlayerLiveState.Dead;
+                            anim.SetInteger("Live", 2);
+                        }
                         hpState = HPState.None;
+                    }
                     break;
                 }
         }
@@ -158,8 +178,11 @@ public class Player : MonoBehaviour
 
     public void PlayerDamageOn(float damage)
     {
-        PlayerHp -= damage;
-        hpPer = PlayerHp / maxHp;
+        if (PlayerHp > damage)
+            PlayerHp -= damage;
+        else
+            PlayerHp = 0;
+            hpPer = PlayerHp / maxHp;
         hpState = HPState.HPDown;
     }
 }
