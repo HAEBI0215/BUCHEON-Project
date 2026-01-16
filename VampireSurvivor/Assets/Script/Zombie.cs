@@ -10,13 +10,15 @@ public class Zombie : MonoBehaviour
         Live,
         Dead
     }
+    [Header("Zombie Info")]
     public LiveState liveState = LiveState.Live;
 
     public enum ActionState
     {
         Idle,
         Move,
-        Attack
+        Attack,
+        Dead
     }
     public ActionState actionState = ActionState.Idle;
 
@@ -24,6 +26,7 @@ public class Zombie : MonoBehaviour
     private NavMeshAgent agent;
     public Animator anim;
 
+    [Header("Attack Info")]
     public float attackRange;
     public enum AttackState
     {
@@ -35,6 +38,9 @@ public class Zombie : MonoBehaviour
     private float attackTime;
     private float delayTime;
     public AnimationClip attackClip;
+
+    [Header("Zonbie Hp")]
+    public float zombieHp;
 
     private void OnDrawGizmos()
     {
@@ -51,7 +57,14 @@ public class Zombie : MonoBehaviour
 
     void Update()
     {
-        Action();
+        switch (liveState)
+        {
+            case LiveState.Live:
+                {
+                    Action();
+                    break;
+                }
+        }
     }
 
     void Action()
@@ -126,5 +139,24 @@ public class Zombie : MonoBehaviour
     void AnimOn(int n)
     {
         anim.SetInteger("ZombieState", n);
+    }
+
+    public void ZombieDamageOn(float damage)
+    {
+        if (zombieHp > damage)
+        {
+            zombieHp -= damage;
+        }
+        else
+        {
+            agent.isStopped = true;
+            AnimOn(3);
+            zombieHp = 0;
+            attackTime = 0;
+            delayTime = 0;
+            attackState = AttackState.None;
+            actionState = ActionState.Dead;
+            liveState = LiveState.Dead;
+        }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,19 @@ public class Player : MonoBehaviour
     public float speed;
     private Vector3 lookTarget;
     public Animator anim;
+    public float PlayerHp;
+    private float maxHp;
+    private float hpPer;
+    public float hpSpeed;
+    public Slider hpSlider;
+
+    public enum HPState
+    {
+        None,
+        HPDown,
+        HPUp
+    }
+    public HPState hpState = HPState.None;
 
     public float jumpPower = 10f;
     public float gravity = -20;
@@ -28,6 +42,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        maxHp = PlayerHp;
     }
 
     // Update is called once per frame
@@ -36,6 +51,7 @@ public class Player : MonoBehaviour
         PlayerMove();
         PlayerRotate();
         PlayerFire();
+        PlayerHP();
     }
 
     void PlayerMove()
@@ -114,6 +130,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    void PlayerHP()
+    {
+        switch (hpState)
+        {
+            case HPState.HPDown:
+                {
+                    hpSlider.value = Mathf.MoveTowards(hpSlider.value, hpPer, hpSpeed * Time.deltaTime);
+                    //HP 슬라이더의 값이 hpPer로 hpSpeed의 속도로 일정하게 이동
+
+                    if (hpSlider.value == hpPer)
+                        hpState = HPState.None;
+                    break;
+                }
+        }
+    }
+
     void CreateBullet()
     {
         //bulletOffset 반경만큼 구체 범위와 격발 위치를 더한 범위에서 무작위로 벡터값 추출
@@ -124,8 +156,10 @@ public class Player : MonoBehaviour
         Destroy(bullet, 1.5f);
     }
 
-    void AnimOn(int n)
+    public void PlayerDamageOn(float damage)
     {
-        anim.SetInteger("PlayerState", n);
+        PlayerHp -= damage;
+        hpPer = PlayerHp / maxHp;
+        hpState = HPState.HPDown;
     }
 }
