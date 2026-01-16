@@ -118,7 +118,7 @@ public class Player : MonoBehaviour
                 CreateBullet();
 
             bulletTime = 0;
-            anim.SetTrigger("Fire");
+            anim.SetBool("Fire", true);
         }
 
         //계속 누르고 있다면
@@ -135,11 +135,17 @@ public class Player : MonoBehaviour
             cam.CameraShakeOn();
         }
 
+        else
+        {
+            if(anim.GetBool("Fire") == true)
+                anim.SetBool("Fire", false);
+        }
+
         if (Input.GetButtonUp("Fire1"))
         {
             bulletTime = 0;
             cam.CameraShakeOff();
-            anim.SetTrigger("Fire");
+            anim.SetBool("Fire", true);
         }
     }
 

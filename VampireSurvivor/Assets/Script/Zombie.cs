@@ -111,43 +111,56 @@ public class Zombie : MonoBehaviour
                 }
             case ActionState.Attack:
                 {
-                    switch (attackState)
+                    float dist = Vector3.Distance(transform.position, player.transform.position);
+                    if (dist <= attackRange)
                     {
-                        case AttackState.Attack:
-                            {
-                                attackTime += Time.deltaTime;
-                                if (attackTime >= attackClip.length * 0.25f)
+                        switch (attackState)
+                        {
+                            case AttackState.Attack:
                                 {
-                                    zombieAttack.ZombieAttackOn();
-                                    AnimOn(0);
-                                    attackTime = 0;
-                                    delayTime = 0;
-                                    attackState = AttackState.Delay;
-                                }
+                                    attackTime += Time.deltaTime;
+                                    if (attackTime >= attackClip.length * 0.25f)
+                                    {
+                                        zombieAttack.ZombieAttackOn();
+                                        AnimOn(0);
+                                        attackTime = 0;
+                                        delayTime = 0;
+                                        attackState = AttackState.Delay;
+                                    }
 
-                                break;
-                            }
-                        case AttackState.Delay:
-                            {
-                                switch (player.GetComponent<Player>().playerLiveState)
-                                {
-                                    case Player.PlayerLiveState.Live:
-                                        {
-                                            delayTime += Time.deltaTime;
-                                            if (delayTime >= attackClip.length * 0.75f)
-                                            {
-                                                AnimOn(2);
-                                                attackTime = 0;
-                                                delayTime = 0;
-                                                attackState = AttackState.Attack;
-                                            }
-                                            break;
-                                        }
+                                    break;
                                 }
-                                break;
-                            }
+                            case AttackState.Delay:
+                                {
+                                    switch (player.GetComponent<Player>().playerLiveState)
+                                    {
+                                        case Player.PlayerLiveState.Live:
+                                            {
+                                                delayTime += Time.deltaTime;
+                                                if (delayTime >= attackClip.length * 0.75f)
+                                                {
+                                                    AnimOn(2);
+                                                    attackTime = 0;
+                                                    delayTime = 0;
+                                                    attackState = AttackState.Attack;
+                                                }
+                                                break;
+                                            }
+                                    }
+                                    break;
+                                }
+                        }
                     }
-                    break;
+                    else
+                    {
+                        agent.isStopped = false;
+                        AnimOn(1);
+                        attackTime = 0;
+                        delayTime = 0;
+                        attackState = AttackState.None;
+                        actionState = ActionState.Move;
+                    }
+                        break;
                 }
         }
     }
@@ -165,6 +178,7 @@ public class Zombie : MonoBehaviour
         }
         else
         {
+            GetComponent<CharacterController>().enabled = false;
             agent.isStopped = true;
             AnimOn(3);
             zombieHp = 0;
@@ -173,6 +187,7 @@ public class Zombie : MonoBehaviour
             attackState = AttackState.None;
             actionState = ActionState.Dead;
             liveState = LiveState.Dead;
+            Destroy(gameObject, 5f);
         }
     }
 }
