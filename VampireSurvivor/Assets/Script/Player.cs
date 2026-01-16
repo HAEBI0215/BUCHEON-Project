@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,11 +9,14 @@ public class Player : MonoBehaviour
     private CharacterController cc;
     public float speed;
     private Vector3 lookTarget;
+    public Animator anim;
 
     [Header("Attack Info")]
     public GameObject bulletPrefab;
     public Transform firePos;
     public float bulletOffset; //총알 간격
+    private float bulletTime; //격발 시간
+    public float setBulletTime; //설정할 격발 시간
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +39,8 @@ public class Player : MonoBehaviour
 
         Vector3 pos = new Vector3(-v, 0, h);
         cc.SimpleMove(pos * speed);
+
+        anim.SetFloat("Move", Mathf.Abs(h) + Mathf.Abs(v));
     }
 
     void PlayerRotate()
@@ -58,6 +64,25 @@ public class Player : MonoBehaviour
         {
             for (int i = 0; i < 3; i++)
                 CreateBullet();
+
+            anim.SetTrigger("Fire");
+        }
+
+        //계속 누르고 있다면
+        if (Input.GetButton("Fire1"))
+        {
+            bulletTime += Time.deltaTime;
+            if (bulletTime >= setBulletTime)
+            {
+                for (int i = 0; i < 3; i++)
+                    CreateBullet();
+                bulletTime = 0;
+            }
+        }
+
+        if (Input.GetButtonUp("Fire1"))
+        {
+            anim.SetTrigger("Fire");
         }
     }
 
@@ -68,6 +93,11 @@ public class Player : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, offset, firePos.rotation);
 
-        Destroy(bullet, 3.0f);
+        Destroy(bullet, 1.5f);
+    }
+
+    void AnimOn(int n)
+    {
+        anim.SetInteger("PlayerState", n);
     }
 }
