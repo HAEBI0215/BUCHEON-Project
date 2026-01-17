@@ -157,16 +157,22 @@ public class Zombie : MonoBehaviour
                     }
                     else
                     {
-                        agent.isStopped = false;
-                        AnimOn(1);
-                        attackTime = 0;
-                        delayTime = 0;
-                        attackState = AttackState.None;
-                        actionState = ActionState.Move;
+                        StartCoroutine(ZombieMove());
                     }
-                        break;
+                    break;
                 }
         }
+    }
+
+    IEnumerator ZombieMove()
+    {
+        yield return new WaitForSeconds(1.0f);
+        agent.isStopped = false;
+        AnimOn(1);
+        attackTime = 0;
+        delayTime = 0;
+        attackState = AttackState.None;
+        actionState = ActionState.Move;
     }
 
     void AnimOn(int n)

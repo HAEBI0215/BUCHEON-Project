@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public float speed;
     private Vector3 lookTarget;
     public Animator anim;
-    public float PlayerHp;
+    public float playerHp;
     private float maxHp;
     private float hpPer;
     public float hpSpeed;
@@ -42,13 +42,15 @@ public class Player : MonoBehaviour
     public float bulletOffset; //총알 간격
     private float bulletTime; //격발 시간
     public float setBulletTime; //설정할 격발 시간
+    public int bulletCount;
+    public float bulletDamage;
     public CameraMove cam;
 
     // Start is called before the first frame update
     void Start()
     {
         cc = GetComponent<CharacterController>();
-        maxHp = PlayerHp;
+        maxHp = playerHp;
     }
 
     // Update is called once per frame
@@ -58,10 +60,13 @@ public class Player : MonoBehaviour
         {
             case PlayerLiveState.Live:
                 {
-                    PlayerMove();
-                    PlayerRotate();
-                    PlayerFire();
-                    PlayerHP();
+                    if ( Time.timeScale != 0)
+                    {
+                        PlayerMove();
+                        PlayerRotate();
+                        PlayerFire();
+                        PlayerHP();
+                    }
                     break;
                 }
         }
@@ -112,14 +117,14 @@ public class Player : MonoBehaviour
 
     void PlayerFire()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            for (int i = 0; i < 3; i++)
-                CreateBullet();
+        //if (Input.GetButtonDown("Fire1"))
+        //{
+        //    for (int i = 0; i < bulletCount; i++)
+        //        CreateBullet();
 
-            bulletTime = 0;
-            anim.SetBool("Fire", true);
-        }
+        //    bulletTime = 0;
+        //    anim.SetBool("Fire", true);
+        //}
 
         //계속 누르고 있다면
         if (Input.GetButton("Fire1"))
@@ -127,7 +132,7 @@ public class Player : MonoBehaviour
             bulletTime += Time.deltaTime;
             if (bulletTime >= setBulletTime)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < bulletCount; i++)
                     CreateBullet();
                 bulletTime = 0;
             }
@@ -179,16 +184,43 @@ public class Player : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, offset, firePos.rotation);
 
+        bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
+
         Destroy(bullet, 1.5f);
     }
 
     public void PlayerDamageOn(float damage)
     {
-        if (PlayerHp > damage)
-            PlayerHp -= damage;
+        if (playerHp > damage)
+            playerHp -= damage;
         else
-            PlayerHp = 0;
-            hpPer = PlayerHp / maxHp;
+            playerHp = 0;
+        hpPer = playerHp / maxHp;
         hpState = HPState.HPDown;
+    }
+
+    public void PlayerHpUp(float hp)
+    {
+        maxHp += hp;
+        hpPer = playerHp / maxHp;
+        hpSlider.value = hpPer;
+        playerHp = maxHp;
+        hpState = HPState.HPUp;
+    }
+    public void BulletUp(int bullet)
+    {
+
+    }
+    public void SpeedUp(float speed)
+    {
+
+    }
+    public void IntervalUp(float interval)
+    {
+
+    }
+    public void DamageUp(float power)
+    {
+
     }
 }

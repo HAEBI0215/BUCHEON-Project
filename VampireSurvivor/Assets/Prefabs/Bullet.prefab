@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpeed: 30
   hitRange: 0.35
-  bulletDamage: 50
+  bulletDamage: 0
 --- !u!1001 &3384209807328741308
 PrefabInstance:
   m_ObjectHideFlags: 0

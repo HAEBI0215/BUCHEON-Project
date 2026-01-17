@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Player")]
+    public Player player;
+
     public Slider expSlider;
     public Text lvTXT;
     private int level = 1;
@@ -19,6 +22,9 @@ public class GameManager : MonoBehaviour
     [Header("Skill")]
     public List<Transform> skill = new List<Transform>();
     public List<Transform> randSkill = new List<Transform>();
+    public Image skillPanel;
+    public Transform offPanel;
+    public Transform onBoard;
 
     public enum ExpState
     {
@@ -37,11 +43,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         PlayerExp();
-
-        if(Input.GetKey(KeyCode.R))
-        {
-            RandomSkillOn();
-        }
     }
 
     void PlayerExp()
@@ -56,8 +57,11 @@ public class GameManager : MonoBehaviour
                         level++;
                         lvTXT.text = level.ToString();
                         playerExp = 0;
-                        maxExp = maxExp * 2.0f;
+                        maxExp = level * 20.0f;
                         expSlider.value = 0;
+                        RandomSkillOn();
+                        Time.timeScale = 0f; //게임 일시 정지
+
                         expState = ExpState.None;
                     }
                     else
@@ -94,5 +98,37 @@ public class GameManager : MonoBehaviour
                 rand = Random.Range(0, skill.Count);
             }
         }
+
+        skillPanel.enabled = true;
+        
+        for (int i = 0; i < randSkill.Count; i++)
+        {
+            randSkill[i].transform.parent = onBoard; //랜덤 스킬 부모를 온보드로 지정
+        }
+    }
+
+    public void PlayerHpUp()
+    {
+
+    }
+    public void BulletUp()
+    {
+
+    }
+    public void SpeedUp()
+    {
+
+    }
+    public void IntervalUp()
+    {
+
+    }
+    public void DamageUp()
+    {
+
+    }
+    public void Special()
+    {
+
     }
 }

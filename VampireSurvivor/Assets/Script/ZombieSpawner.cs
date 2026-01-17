@@ -32,13 +32,16 @@ public class ZombieSpawner : MonoBehaviour
         {
             case SpawnState.Spawn:
                 {
-                    spawnTime += Time.deltaTime;
-                    if (spawnTime >= spawnInterval)
+                    if (Time.timeScale != 0)
                     {
-                        for (int i = 0; i < SpawnCount; i++)
-                            CreateZombie();
-                        SpawnIntervvalOn();
-                        spawnTime = 0f;
+                        spawnTime += Time.deltaTime;
+                        if (spawnTime >= spawnInterval)
+                        {
+                            for (int i = 0; i < SpawnCount; i++)
+                                CreateZombie();
+                            SpawnIntervvalOn();
+                            spawnTime = 0f;
+                        }
                     }
 
                     break;
@@ -48,7 +51,7 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnIntervvalOn()
     {
-        SpawnCount = Random.Range(10, 30);
+        SpawnCount = Random.Range(10, 20);
         spawnInterval = Random.Range(0.5f, 3.0f);
     }
 
