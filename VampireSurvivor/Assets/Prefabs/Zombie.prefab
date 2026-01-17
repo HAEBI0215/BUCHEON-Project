@@ -104,6 +104,7 @@ MonoBehaviour:
     type: 3}
   zombieAttack: {fileID: 4193044916846258375}
   zombieHp: 1000
+  zombieExp: 10
 --- !u!1 &1727837747362072269
 GameObject:
   m_ObjectHideFlags: 0

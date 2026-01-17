@@ -45,7 +45,7 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnIntervvalOn()
     {
-        SpawnCount = Random.Range(1, 5);
+        SpawnCount = Random.Range(10, 30);
         spawnInterval = Random.Range(0.5f, 3.0f);
     }
 

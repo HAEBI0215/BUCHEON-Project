@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,6 +43,9 @@ public class Zombie : MonoBehaviour
 
     [Header("Zonbie Hp")]
     public float zombieHp;
+
+    [Header("Zombie Exp")]
+    public float zombieExp;
 
     private void OnDrawGizmos()
     {
@@ -188,6 +192,9 @@ public class Zombie : MonoBehaviour
             actionState = ActionState.Dead;
             liveState = LiveState.Dead;
             Destroy(gameObject, 5f);
+
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().PlayerExpUp(zombieExp);
+            //경험치 드랍
         }
     }
 }
