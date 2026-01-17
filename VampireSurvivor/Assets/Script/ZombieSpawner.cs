@@ -5,6 +5,8 @@ using UnityEngine.VFX;
 
 public class ZombieSpawner : MonoBehaviour
 {
+    public Transform target;
+
     public enum SpawnState
     {
         None,
@@ -25,6 +27,7 @@ public class ZombieSpawner : MonoBehaviour
 
     void Update()
     {
+        transform.position = new Vector3(target.position.x, transform.position.y, target.position.z);
         switch (spawnState)
         {
             case SpawnState.Spawn:
@@ -53,5 +56,6 @@ public class ZombieSpawner : MonoBehaviour
     {
         int n = Random.Range(0, spawnPos.Count); //0번부터 spawnPos의 마지막 배열번호 중 무작위 수 하나 출력
         GameObject zombie = Instantiate(zombiePrefab, spawnPos[n].position, spawnPos[n].rotation);
+        Destroy(zombie, 60.0f);
     }
 }

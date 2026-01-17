@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     private float maxExp = 20f;
     private float expPer; //정규화된 Exp
 
+    [Header("Skill")]
+    public List<Transform> skill = new List<Transform>();
+    public List<Transform> randSkill = new List<Transform>();
+
     public enum ExpState
     {
         None,
@@ -33,6 +37,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         PlayerExp();
+
+        if(Input.GetKey(KeyCode.R))
+        {
+            RandomSkillOn();
+        }
     }
 
     void PlayerExp()
@@ -68,5 +77,22 @@ public class GameManager : MonoBehaviour
         playerExp += exp;
         expPer = playerExp / maxExp;
         expState = ExpState.ExpUp;
+    }
+
+    void RandomSkillOn()
+    {
+        int rand = Random.Range(0, skill.Count);
+
+        while (randSkill.Count < 3)
+        {
+            if (!randSkill.Contains(skill[rand]))
+            {
+                randSkill.Add(skill[rand]);
+            }
+            else
+            {
+                rand = Random.Range(0, skill.Count);
+            }
+        }
     }
 }
