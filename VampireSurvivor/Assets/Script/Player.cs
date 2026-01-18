@@ -174,6 +174,15 @@ public class Player : MonoBehaviour
                     }
                     break;
                 }
+            case HPState.HPUp:
+                {
+                    hpSlider.value = Mathf.MoveTowards(hpSlider.value, hpPer, hpSpeed * Time.deltaTime);
+                    if (hpSlider.value == hpPer)
+                    {
+                        hpState = HPState.None;
+                    }
+                    break;
+                }
         }
     }
 
@@ -205,22 +214,23 @@ public class Player : MonoBehaviour
         hpPer = playerHp / maxHp;
         hpSlider.value = hpPer;
         playerHp = maxHp;
+        hpPer = playerHp / maxHp;
         hpState = HPState.HPUp;
     }
     public void BulletUp(int bullet)
     {
-
+        bulletCount = bulletCount + bullet;
     }
     public void SpeedUp(float speed)
     {
-
+        speed = speed + speed;
     }
     public void IntervalUp(float interval)
     {
-
+        setBulletTime = setBulletTime * interval;
     }
     public void DamageUp(float power)
     {
-
+        power = power + power;
     }
 }

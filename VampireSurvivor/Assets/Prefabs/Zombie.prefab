@@ -103,7 +103,7 @@ MonoBehaviour:
   attackClip: {fileID: 1942785488916213143, guid: df45eaf8e6125d74d88e4d605fdf7a40,
     type: 3}
   zombieAttack: {fileID: 4193044916846258375}
-  zombieHp: 1000
+  zombieHp: 100
   zombieExp: 10
 --- !u!1 &1727837747362072269
 GameObject:

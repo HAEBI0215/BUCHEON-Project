@@ -5,6 +5,7 @@ using UnityEngine.VFX;
 
 public class ZombieSpawner : MonoBehaviour
 {
+    public GameManager gameManager;
     public Transform target;
 
     public enum SpawnState
@@ -51,7 +52,7 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnIntervvalOn()
     {
-        SpawnCount = Random.Range(10, 20);
+        SpawnCount = Random.Range(gameManager.level, gameManager.level * 3);
         spawnInterval = Random.Range(0.5f, 3.0f);
     }
 
@@ -59,6 +60,7 @@ public class ZombieSpawner : MonoBehaviour
     {
         int n = Random.Range(0, spawnPos.Count); //0번부터 spawnPos의 마지막 배열번호 중 무작위 수 하나 출력
         GameObject zombie = Instantiate(zombiePrefab, spawnPos[n].position, spawnPos[n].rotation);
+        zombie.GetComponent<Zombie>().zombieHp = gameManager.level * 100f;
         Destroy(zombie, 60.0f);
     }
 }

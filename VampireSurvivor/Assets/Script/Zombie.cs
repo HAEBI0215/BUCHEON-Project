@@ -143,6 +143,7 @@ public class Zombie : MonoBehaviour
                                                 delayTime += Time.deltaTime;
                                                 if (delayTime >= attackClip.length * 0.75f)
                                                 {
+                                                    LookPlayer();
                                                     AnimOn(2);
                                                     attackTime = 0;
                                                     delayTime = 0;
@@ -201,6 +202,17 @@ public class Zombie : MonoBehaviour
 
             GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().PlayerExpUp(zombieExp);
             //경험치 드랍
+        }
+    }
+
+    void LookPlayer()
+    {
+        if (player)
+        {
+            Vector3 relation = new Vector3(player.transform.position.x, 0, player.transform.position.z) 
+                - new Vector3(transform.position.x, 0, transform.position.z);
+            Quaternion rotation = Quaternion.LookRotation(relation);
+            transform.rotation = rotation;
         }
     }
 }

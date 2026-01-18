@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public Slider expSlider;
     public Text lvTXT;
-    private int level = 1;
+    public int level = 1;
     public float expSpeed;
 
     [Header("EXP Info")]
@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     public Image skillPanel;
     public Transform offPanel;
     public Transform onBoard;
+    public float skillHp;
+    public float skillSpeed;
+    public float skillInterval;
+    public float skillDamage;
 
     public enum ExpState
     {
@@ -109,26 +113,44 @@ public class GameManager : MonoBehaviour
 
     public void PlayerHpUp()
     {
-
+        player.PlayerHpUp(skillHp);
+        CloseSkillPanel();
     }
     public void BulletUp()
     {
-
+        player.BulletUp(1);
+        CloseSkillPanel();
     }
     public void SpeedUp()
     {
-
+        player.SpeedUp(skillSpeed);
+        CloseSkillPanel();
     }
     public void IntervalUp()
     {
-
+        player.IntervalUp(skillInterval);
+        CloseSkillPanel();
     }
     public void DamageUp()
     {
-
+        player.DamageUp(skillDamage);
+        CloseSkillPanel();
     }
     public void Special()
     {
 
+        CloseSkillPanel();
+    }
+
+    void CloseSkillPanel()
+    {
+        skillPanel.enabled = false;
+        
+        for (int i = 0; i < skill.Count; i++)
+        {
+            skill[i].transform.parent = offPanel; //모든 스킬의 부모를 오프패널로 지정
+        }
+
+        Time.timeScale = 1f;
     }
 }
