@@ -52,15 +52,18 @@ public class ZombieSpawner : MonoBehaviour
 
     void SpawnIntervvalOn()
     {
-        SpawnCount = Random.Range(gameManager.level, gameManager.level * 3);
+        SpawnCount = Random.Range(gameManager.level, gameManager.level * 2);
         spawnInterval = Random.Range(0.5f, 3.0f);
     }
 
     void CreateZombie()
     {
-        int n = Random.Range(0, spawnPos.Count); //0번부터 spawnPos의 마지막 배열번호 중 무작위 수 하나 출력
-        GameObject zombie = Instantiate(zombiePrefab, spawnPos[n].position, spawnPos[n].rotation);
-        zombie.GetComponent<Zombie>().zombieHp = gameManager.level * 100f;
-        Destroy(zombie, 60.0f);
+        if (Player.PlayerLiveState.Live == gameManager.player.playerLiveState)
+        {
+            int n = Random.Range(0, spawnPos.Count); //0번부터 spawnPos의 마지막 배열번호 중 무작위 수 하나 출력
+            GameObject zombie = Instantiate(zombiePrefab, spawnPos[n].position, spawnPos[n].rotation);
+            zombie.GetComponent<Zombie>().zombieHp = gameManager.level * 100f;
+            Destroy(zombie, 60.0f);
+        }
     }
 }

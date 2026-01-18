@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     public float setBulletTime; //설정할 격발 시간
     public int bulletCount;
     public float bulletDamage;
+    public GameObject fireSound;
     public CameraMove cam;
 
     // Start is called before the first frame update
@@ -124,6 +125,7 @@ public class Player : MonoBehaviour
             {
                 for (int i = 0; i < bulletCount; i++)
                     CreateBullet();
+                CreateFireSound();
                 bulletTime = 0;
             }
 
@@ -132,7 +134,7 @@ public class Player : MonoBehaviour
 
         else
         {
-            if(anim.GetBool("Fire") == true)
+            if (anim.GetBool("Fire") == true)
                 anim.SetBool("Fire", false);
         }
 
@@ -186,6 +188,11 @@ public class Player : MonoBehaviour
         bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
 
         Destroy(bullet, 1.5f);
+    }
+    void CreateFireSound()
+    {
+        GameObject sound = Instantiate(fireSound);
+        Destroy(sound, 1.0f);
     }
 
     public void PlayerDamageOn(float damage)
