@@ -117,16 +117,6 @@ public class Player : MonoBehaviour
 
     void PlayerFire()
     {
-        //if (Input.GetButtonDown("Fire1"))
-        //{
-        //    for (int i = 0; i < bulletCount; i++)
-        //        CreateBullet();
-
-        //    bulletTime = 0;
-        //    anim.SetBool("Fire", true);
-        //}
-
-        //계속 누르고 있다면
         if (Input.GetButton("Fire1"))
         {
             bulletTime += Time.deltaTime;

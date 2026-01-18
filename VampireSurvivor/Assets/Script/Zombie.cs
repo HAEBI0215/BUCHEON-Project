@@ -190,7 +190,8 @@ public class Zombie : MonoBehaviour
         else
         {
             GetComponent<CharacterController>().enabled = false;
-            agent.isStopped = true;
+            if (agent)
+                agent.isStopped = true;
             AnimOn(3);
             zombieHp = 0;
             attackTime = 0;

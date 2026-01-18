@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public float skillSpeed;
     public float skillInterval;
     public float skillDamage;
+    public GameObject specialAttack;
 
     public enum ExpState
     {
@@ -138,6 +139,8 @@ public class GameManager : MonoBehaviour
     }
     public void Special()
     {
+        GameObject specialAtk = Instantiate(specialAttack, player.transform.position, Quaternion.identity);
+        Destroy(specialAtk, 5f);
 
         CloseSkillPanel();
     }
